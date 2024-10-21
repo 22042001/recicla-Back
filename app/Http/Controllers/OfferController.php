@@ -21,7 +21,7 @@ class OfferController extends Controller
     }
 
     /**
-     * Crear una nueva oferta.
+     * Crear una nueva oferta con imágenes.
      */
     public function store(Request $request)
     {
@@ -52,7 +52,7 @@ class OfferController extends Controller
         // Subir imágenes si existen
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('images', 'public');
+                $path = $file->store('ofertas', 'public');
                 Image::create([
                     'offer_id' => $offer->id,
                     'ruta_imagen' => $path,
@@ -60,11 +60,11 @@ class OfferController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Oferta creada exitosamente', 'offer' => $offer], 201);
+        return response()->json(['message' => 'Oferta creada exitosamente', 'offer' => $offer->load('images')], 201);
     }
 
     /**
-     * Mostrar una oferta específica.
+     * Mostrar una oferta específica con imágenes.
      */
     public function show($id)
     {
@@ -78,7 +78,7 @@ class OfferController extends Controller
     }
 
     /**
-     * Actualizar una oferta.
+     * Actualizar una oferta con imágenes.
      */
     public function update(Request $request, $id)
     {
@@ -114,7 +114,7 @@ class OfferController extends Controller
 
             // Subir nuevas imágenes
             foreach ($request->file('images') as $file) {
-                $path = $file->store('images', 'public');
+                $path = $file->store('ofertas', 'public');
                 Image::create([
                     'offer_id' => $offer->id,
                     'ruta_imagen' => $path,
@@ -122,11 +122,11 @@ class OfferController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Oferta actualizada exitosamente', 'offer' => $offer]);
+        return response()->json(['message' => 'Oferta actualizada exitosamente', 'offer' => $offer->load('images')]);
     }
 
     /**
-     * Eliminar una oferta.
+     * Eliminar una oferta con sus imágenes.
      */
     public function destroy($id)
     {

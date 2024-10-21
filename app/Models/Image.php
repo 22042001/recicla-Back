@@ -22,4 +22,15 @@ class Image extends Model
     {
         return $this->belongsTo(Offer::class);
     }
+
+    /**
+     * Obtener la URL completa de la imagen.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return asset('storage/' . $this->ruta_imagen);
+    }
 }
+
