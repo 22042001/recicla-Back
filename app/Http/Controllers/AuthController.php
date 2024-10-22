@@ -13,12 +13,13 @@ class AuthController extends Controller
     /**
      * Registro de un nuevo usuario.
      */
+    // Registro de un nuevo usuario
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
             'teléfono' => 'nullable|string|max:15',
             'ubicación' => 'nullable|string|max:255',
         ]);
@@ -35,13 +36,9 @@ class AuthController extends Controller
             'ubicación' => $request->ubicación,
         ]);
 
-        $token = JWTAuth::fromUser($user);
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201);
+        return response()->json(['message' => 'Usuario registrado con éxito', 'user' => $user], 201);
     }
+
 
     /**
      * Inicio de sesión.
