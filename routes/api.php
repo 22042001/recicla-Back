@@ -14,7 +14,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth.jwt')
 // Rutas protegidas por JWT
 Route::middleware('auth.jwt')->group(function () {
     // CRUD de Usuarios (excepto creación)
-    Route::apiResource('users', UserController::class)->except(['store']);
+    Route::apiResource('users', UserController::class);
 
     // CRUD de Tipos de Material
     Route::apiResource('materials', MaterialTypeController::class);
