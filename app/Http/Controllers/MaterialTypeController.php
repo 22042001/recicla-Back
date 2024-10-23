@@ -47,14 +47,21 @@ class MaterialTypeController extends Controller
     // Eliminar un tipo de material
     public function destroy($id)
     {
-        $material = MaterialType::find($id);
-        if (!$material) {
+        $materialType = MaterialType::find($id);
+    
+        if (!$materialType) {
             return response()->json(['message' => 'Tipo de material no encontrado'], 404);
         }
-
-        $material->delete();
-
-        return response()->json(['message' => 'Tipo de material eliminado']);
+    
+        // Verificar si hay ofertas relacionadas
+        if ($materialType->offers()->count() > 0) {
+            return response()->json(['message' => 'No se puede eliminar el tipo de material, ya que tiene ofertas relacionadas'], 400);
+        }
+    
+        $materialType->delete();
+    
+        return response()->json(['message' => 'Tipo de material eliminado con éxito'], 200);
     }
+    
 }
 

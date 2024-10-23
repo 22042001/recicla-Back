@@ -32,6 +32,7 @@ class OfferController extends Controller
             'cantidad' => 'required|integer',
             'tipo_material_id' => 'required|exists:material_types,id',
             'ubicación' => 'required|string|max:255',
+            'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -39,6 +40,7 @@ class OfferController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        // Crear la oferta
         $offer = Offer::create([
             'user_id' => Auth::id(),
             'título' => $request->título,
@@ -62,6 +64,7 @@ class OfferController extends Controller
 
         return response()->json(['message' => 'Oferta creada exitosamente', 'offer' => $offer->load('images')], 201);
     }
+
 
     /**
      * Mostrar una oferta específica con imágenes.
@@ -115,6 +118,9 @@ class OfferController extends Controller
             // Subir nuevas imágenes
             foreach ($request->file('images') as $file) {
                 $path = $file->store('ofertas', 'public');
+                if (!$path) {
+                    return response()->json(['message' => 'Error al subir la imagen'], 500);
+                }
                 Image::create([
                     'offer_id' => $offer->id,
                     'ruta_imagen' => $path,
